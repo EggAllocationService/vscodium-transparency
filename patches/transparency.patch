@@ -1,0 +1,67 @@
+diff --git a/build/builtin/main.js b/build/builtin/main.js
+index f4dbc6e8325..a9ecfcbe7f1 100644
+--- a/build/builtin/main.js
++++ b/build/builtin/main.js
+@@ -27,6 +27,7 @@ app.once('ready', () => {
+ 	window = new BrowserWindow({
+ 		width: 800,
+ 		height: 600,
++		transparent: true,
+ 		webPreferences: {
+ 			nodeIntegration: true,
+ 			contextIsolation: false,
+diff --git a/src/vs/platform/sharedProcess/electron-main/sharedProcess.ts b/src/vs/platform/sharedProcess/electron-main/sharedProcess.ts
+index 49267052530..c39c138a62b 100644
+--- a/src/vs/platform/sharedProcess/electron-main/sharedProcess.ts
++++ b/src/vs/platform/sharedProcess/electron-main/sharedProcess.ts
+@@ -46,6 +46,7 @@ export class SharedProcess extends Disposable implements ISharedProcess {
+ 		@IThemeMainService private readonly themeMainService: IThemeMainService,
+ 		@IProtocolMainService private readonly protocolMainService: IProtocolMainService
+ 	) {
++
+ 		super();
+ 
+ 		this.registerListeners();
+@@ -216,11 +217,13 @@ export class SharedProcess extends Disposable implements ISharedProcess {
+ 
+ 	private createWindow(): void {
+ 		const configObjectUrl = this._register(this.protocolMainService.createIPCObjectUrl<ISharedProcessConfiguration>());
+-
++		// suppress errors because idc
++		this.themeMainService.getBackgroundColor();
+ 		// shared process is a hidden window by default
+ 		this.window = new BrowserWindow({
+ 			show: false,
+-			backgroundColor: this.themeMainService.getBackgroundColor(),
++			transparent: true,
++			backgroundColor: "#00000000",
+ 			webPreferences: {
+ 				preload: FileAccess.asFileUri('vs/base/parts/sandbox/electron-browser/preload.js', require).fsPath,
+ 				additionalArguments: [`--vscode-window-config=${configObjectUrl.resource.toString()}`, '--vscode-window-kind=shared-process'],
+diff --git a/src/vs/platform/theme/electron-main/themeMainService.ts b/src/vs/platform/theme/electron-main/themeMainService.ts
+index caa1e0b6f45..0d20594b6c2 100644
+--- a/src/vs/platform/theme/electron-main/themeMainService.ts
++++ b/src/vs/platform/theme/electron-main/themeMainService.ts
+@@ -120,7 +120,7 @@ export class ThemeMainService extends Disposable implements IThemeMainService {
+ 	private updateBackgroundColor(windowId: number, splash: IPartsSplash): void {
+ 		for (const window of BrowserWindow.getAllWindows()) {
+ 			if (window.id === windowId) {
+-				window.setBackgroundColor(splash.colorInfo.background);
++				//window.setBackgroundColor(splash.colorInfo.background);
+ 				break;
+ 			}
+ 		}
+diff --git a/src/vs/platform/windows/electron-main/window.ts b/src/vs/platform/windows/electron-main/window.ts
+index 938c6eb7300..57c387353cd 100644
+--- a/src/vs/platform/windows/electron-main/window.ts
++++ b/src/vs/platform/windows/electron-main/window.ts
+@@ -194,7 +194,8 @@ export class CodeWindow extends Disposable implements ICodeWindow {
+ 				height: this.windowState.height,
+ 				x: this.windowState.x,
+ 				y: this.windowState.y,
+-				backgroundColor: this.themeMainService.getBackgroundColor(),
++				transparent: true,
++				backgroundColor: "#00000000",
+ 				minWidth: WindowMinimumSize.WIDTH,
+ 				minHeight: WindowMinimumSize.HEIGHT,
+ 				show: !isFullscreenOrMaximized, // reduce flicker by showing later
