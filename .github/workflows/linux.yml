@@ -16,6 +16,9 @@ jobs:
       env:
         OS_NAME: 'linux'
         VSCODE_ARCH: ${{ matrix.vscode_arch }}
+        SHOULD_BUILD_RPM: 'no'
+        SHOULD_BUILD_APPIMAGE: 'no'
+        SHOULD_BUILD_REH: 'no'
 
     strategy:
       fail-fast: false
@@ -24,12 +27,6 @@ jobs:
         - vscode_arch: x64
           npm_arch: x64
           image: vscodium/vscodium-linux-build-agent:bionic-x64
-        - vscode_arch: arm64
-          npm_arch: arm64
-          image: vscodium/vscodium-linux-build-agent:stretch-arm64
-        - vscode_arch: armhf
-          npm_arch: armv7l
-          image: vscodium/vscodium-linux-build-agent:stretch-armhf
 
     steps:
       - uses: actions/checkout@v3
@@ -92,58 +89,10 @@ jobs:
         run: ./release.sh
         if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
 
-      - name: Update versions repo
-        run: ./update_version.sh
+      - name: Trigger PKGBUILD
+        run: ./poke.sh
         env:
-          GITHUB_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }}
-          GITHUB_USERNAME: ${{ github.repository_owner }}
+          POKE_TOKEN: ${{ secrets.POKE_TOKEN }}
         if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
 
-  snap:
-    needs: release
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-        - amd64
-        # - arm64
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Check version
-        run: ./stores/snapcraft/check_version.sh
-        env:
-          ARCHITECTURE: ${{ matrix.platform }}
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
-
-      # - uses: docker/setup-qemu-action@v1
-      #   if: env.SHOULD_DEPLOY == 'yes'
-
-      # - uses: diddlesnaps/snapcraft-multiarch-action@v1
-      #   with:
-      #     path: stores/snapcraft
-      #     architecture: ${{ matrix.platform }}
-      #   id: build
-      #   if: env.SHOULD_DEPLOY == 'yes'
-
-      # - uses: diddlesnaps/snapcraft-review-action@v1
-      #   with:
-      #     snap: ${{ steps.build.outputs.snap }}
-      #     isClassic: 'true'
-      #   if: env.SHOULD_DEPLOY == 'yes'
-      - uses: snapcore/action-build@v1
-        with:
-          path: stores/snapcraft
-        id: build
-        if: env.SHOULD_DEPLOY == 'yes'
-
-
-      - uses: snapcore/action-publish@master
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
-        with:
-          snap: ${{ steps.build.outputs.snap }}
-          release: stable
-        if: env.SHOULD_DEPLOY == 'yes'
+ 
