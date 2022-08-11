@@ -1,0 +1,13 @@
+diff --git a/src/vs/workbench/browser/style.ts b/src/vs/workbench/browser/style.ts
+index 31d0aa03440..e1082b7375f 100644
+--- a/src/vs/workbench/browser/style.ts
++++ b/src/vs/workbench/browser/style.ts
+@@ -22,7 +22,7 @@ registerThemingParticipant((theme, collector) => {
+ 
+ 	// Background (We need to set the workbench background color so that on Windows we get subpixel-antialiasing)
+ 	const workbenchBackground = WORKBENCH_BACKGROUND(theme);
+-	collector.addRule(`.monaco-workbench { background-color: ${workbenchBackground}; }`);
++	collector.addRule(`.monaco-workbench { background-color: transparent !important; }`);
+ 
+ 	// Icon defaults
+ 	const iconForegroundColor = theme.getColor(iconForeground);
