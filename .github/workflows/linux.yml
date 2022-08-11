@@ -29,7 +29,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
+      
+      - name: Test Arch
+        uses: docker://archlinux:base-devel-20220807.0.72894
+        with:
+          entrypoint: /usr/bin/bash
+          args: -c "cd /github/workspace && ls"
       - name: Install GH
         run: ./install_gh.sh
 
@@ -82,7 +87,7 @@ jobs:
         uses: docker://archlinux:base-devel-20220807.0.72894
         with:
           entrypoint: /usr/bin/bash
-          args: -c 'cd /github/workspace && chmod +x makepkg.sh && ./makepkg.sh'
+          args: -c "cd /github/workspace && chmod +x makepkg.sh && ./makepkg.sh"
 
 
       - name: Prepare artifacts
