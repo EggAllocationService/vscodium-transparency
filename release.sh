@@ -23,7 +23,7 @@ REPO_NAME="${GITHUB_REPOSITORY:(${#OWNER}+1)}"
 REPOSITORY="${REPO_NAME:-"vscodium"}"
 
 # git workaround
-git config --global --add safe.directory /__w/vscodium/vscodium
+git config --global --add safe.directory "*"
 
 
 for FILE in *
