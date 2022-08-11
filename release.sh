@@ -24,6 +24,7 @@ REPOSITORY="${REPO_NAME:-"vscodium"}"
 
 # git workaround
 git config --global --add safe.directory "*"
+git config --global --add safe.directory '/__w/vscodium-transparency/vscodium-transparency'
 
 
 for FILE in *
