@@ -1,0 +1,23 @@
+diff --git a/src/vs/workbench/browser/parts/titlebar/titlebarPart.ts b/src/vs/workbench/browser/parts/titlebar/titlebarPart.ts
+index 34edabed458..138cc0bbe4d 100644
+--- a/src/vs/workbench/browser/parts/titlebar/titlebarPart.ts
++++ b/src/vs/workbench/browser/parts/titlebar/titlebarPart.ts
+@@ -16,7 +16,7 @@ import { IConfigurationService, IConfigurationChangeEvent } from 'vs/platform/co
+ import { DisposableStore, dispose } from 'vs/base/common/lifecycle';
+ import { IBrowserWorkbenchEnvironmentService } from 'vs/workbench/services/environment/browser/environmentService';
+ import { IThemeService, registerThemingParticipant, ThemeIcon } from 'vs/platform/theme/common/themeService';
+-import { TITLE_BAR_ACTIVE_BACKGROUND, TITLE_BAR_ACTIVE_FOREGROUND, TITLE_BAR_INACTIVE_FOREGROUND, TITLE_BAR_INACTIVE_BACKGROUND, TITLE_BAR_BORDER, WORKBENCH_BACKGROUND } from 'vs/workbench/common/theme';
++import { TITLE_BAR_ACTIVE_BACKGROUND, TITLE_BAR_ACTIVE_FOREGROUND, TITLE_BAR_INACTIVE_FOREGROUND, TITLE_BAR_INACTIVE_BACKGROUND, TITLE_BAR_BORDER } from 'vs/workbench/common/theme';
+ import { isMacintosh, isWindows, isLinux, isWeb, isNative } from 'vs/base/common/platform';
+ import { Color } from 'vs/base/common/color';
+ import { EventType, EventHelper, Dimension, isAncestor, append, $, addDisposableListener, runAtThisOrScheduleAtNextAnimationFrame, prepend, reset } from 'vs/base/browser/dom';
+@@ -371,7 +371,8 @@ export class TitlebarPart extends Part implements ITitleService {
+ 				// To benefit from LCD font rendering, we must ensure that we always set an
+ 				// opaque background color. As such, we compute an opaque color given we know
+ 				// the background color is the workbench background.
+-				return color.isOpaque() ? color : color.makeOpaque(WORKBENCH_BACKGROUND(theme));
++				// lol actually no
++				return color;
+ 			}) || '';
+ 			this.element.style.backgroundColor = titleBackground;
+ 
