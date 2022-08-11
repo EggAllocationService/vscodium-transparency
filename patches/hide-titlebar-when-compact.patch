@@ -1,0 +1,15 @@
+diff --git a/src/vs/workbench/browser/layout.ts b/src/vs/workbench/browser/layout.ts
+index 9151c945a6c..88393fffc8d 100644
+--- a/src/vs/workbench/browser/layout.ts
++++ b/src/vs/workbench/browser/layout.ts
+@@ -981,6 +981,10 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
+ 
+ 	private shouldShowTitleBar(): boolean {
+ 
++		if (this.configurationService.getValue<string>("window.menuBarVisibility") === "compact") {
++			return false
++		}
++
+ 		// Using the native title bar, don't ever show the custom one
+ 		if (getTitleBarStyle(this.configurationService) === 'native') {
+ 			return false;
