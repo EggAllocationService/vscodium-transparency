@@ -82,7 +82,7 @@ jobs:
         uses: docker://archlinux:base-devel-20220807.0.72894
         with:
           entrypoint: /usr/bin/bash
-          args: -c 'cd $GITHUB_WORKSPACE && chmod +x makepkg.sh && ./makepkg.sh'
+          args: -c 'cd /github/workspace && chmod +x makepkg.sh && ./makepkg.sh'
 
 
       - name: Prepare artifacts
