@@ -1,11 +1,11 @@
 # Maintainer: Cedric Roijakkers <cedric [the at sign goes here] roijakkers [the dot sign goes here] be>.
 # Inspired from the PKGBUILD for vscodium-bin and code-stable-git.
 
-pkgname=vscodium
+pkgname=vscodium-transparent
 # Make sure the pkgver matches the git tags in vscodium and vscode git repo's!
 pkgver=1.70.1
 pkgrel=1
-pkgdesc="Free/Libre Open Source Software Binaries of VSCode (git build from latest release)."
+pkgdesc="Free/Libre Open Source Software Binaries of VSCode (git build from latest release), with enabled window transparency."
 arch=('x86_64' 'aarch64' 'armv7h')
 # The vscodium repo that will be checked out.
 url='https://github.com/VSCodium/vscodium.git'
@@ -45,6 +45,12 @@ source=(
     'vscodium.desktop'
 )
 provides=('codium')
+conflicts=(
+  'vscodium'
+  'vscodium-git'
+  'vscodium-bin'
+  'codium'
+)
 sha256sums=('SKIP')
 ###############################################################################
 
@@ -76,12 +82,12 @@ pkgver() {
 }
 package() {
     install -d -m755 ${pkgdir}/usr/bin
-    install -d -m755 ${pkgdir}/usr/share/{${pkgname},applications,pixmaps}
-    install -d -m755 ${pkgdir}/usr/share/licenses/${pkgname}
-    cp -r ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}
-    cp -r ${srcdir}/VSCode-linux-${_vscode_arch}/* ${pkgdir}/usr/share/${pkgname}
-    ln -s /usr/share/${pkgname}/bin/codium ${pkgdir}/usr/bin/codium
-    ln -s /usr/share/${pkgname}/bin/codium ${pkgdir}/usr/bin/vscodium
+    install -d -m755 ${pkgdir}/usr/share/{vscodium,applications,pixmaps}
+    install -d -m755 ${pkgdir}/usr/share/licenses/vscodium
+    cp -r ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/vscodium
+    cp -r ${srcdir}/VSCode-linux-${_vscode_arch}/* ${pkgdir}/usr/share/vscodium
+    ln -s /usr/share/vscodium/bin/codium ${pkgdir}/usr/bin/codium
+    ln -s /usr/share/vscodium/bin/codium ${pkgdir}/usr/bin/vscodium
     install -D -m644 vscodium.desktop ${pkgdir}/usr/share/applications/vscodium.desktop
     install -D -m644 ${srcdir}/VSCode-linux-${_vscode_arch}/resources/app/resources/linux/code.png \
             ${pkgdir}/usr/share/pixmaps/vscodium.png
