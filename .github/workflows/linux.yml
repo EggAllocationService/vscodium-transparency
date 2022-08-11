@@ -35,6 +35,12 @@ jobs:
         with:
           entrypoint: /usr/bin/bash
           args: -c "cd /github/workspace && ls"
+      - name: Build Arch Package
+        uses: docker://archlinux:base-devel-20220807.0.72894
+        with:
+          entrypoint: /usr/bin/bash
+          args: -c "cd /github/workspace && chmod +x makepkg.sh && ./makepkg.sh"
+
       - name: Install GH
         run: ./install_gh.sh
 
@@ -83,11 +89,6 @@ jobs:
         run: ./build.sh
         if: env.SHOULD_BUILD == 'yes'
 
-      - name: Build Arch Package
-        uses: docker://archlinux:base-devel-20220807.0.72894
-        with:
-          entrypoint: /usr/bin/bash
-          args: -c "cd /github/workspace && chmod +x makepkg.sh && ./makepkg.sh"
 
 
       - name: Prepare artifacts
