@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
-  push:
   pull_request:
     branches: [ master ]
 
@@ -79,20 +78,22 @@ jobs:
         run: ./build.sh
         if: env.SHOULD_BUILD == 'yes'
 
+      - name: Build Arch Package
+        uses: docker://archlinux:base-devel-20220807.0.72894
+        with:
+          entrypoint: /usr/bin/bash
+          args: -c 'cd $GITHUB_WORKSPACE && chmod +x makepkg.sh && ./makepkg.sh'
+
+
       - name: Prepare artifacts
         run: ./prepare_artifacts.sh
         if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
-
+    
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./release.sh
         if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
 
-      - name: Trigger PKGBUILD
-        run: ./poke.sh
-        env:
-          POKE_TOKEN: ${{ secrets.POKE_TOKEN }}
-        if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
-
+      
  

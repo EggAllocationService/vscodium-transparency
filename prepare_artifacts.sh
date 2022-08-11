@@ -82,7 +82,8 @@ else
     echo "Moving AppImage"
     mv build/linux/appimage/out/*.AppImage* artifacts/
   fi
-
+  echo "Moving Pacman package"
+  mv *.pkg.tar* artifacts/
   VSCODE_PLATFORM="linux"
 fi
 
