@@ -19,6 +19,10 @@
 
 </div>
 
+<div align="center">
+  **This project is not affiliated with VSCodium or Microsoft. Below is the unedited README.md from the VSCodium repository.**
+</div>
+
 **This is not a fork. This is a repository of scripts to automatically build Microsoft's `vscode` repository into freely-licensed binaries with a community-driven default configuration.**
 
 ## Table of Contents
