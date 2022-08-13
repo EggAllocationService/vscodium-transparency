@@ -87,6 +87,7 @@ jobs:
 
       - name: Build Arch Package
         uses: docker://archlinux:base-devel-20220807.0.72894
+        if: env.SHOULD_BUILD == 'yes'
         with:
           entrypoint: /usr/bin/bash
           args: -c "cd /github/workspace && chmod +x makepkg.sh && pacman --noconfirm -Sy jq && ./makepkg.sh"
