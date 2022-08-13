@@ -7,7 +7,7 @@ if [[ -z "${GITHUB_TOKEN}" ]]; then
   exit
 fi
 
-REPOSITORY="${GITHUB_REPOSITORY:-"VSCodium/vscodium"}"
+REPOSITORY="${GITHUB_REPOSITORY:-"EggAllocationService/vscodium-transparency"}"
 GITHUB_RESPONSE=$( curl -s -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${REPOSITORY}/releases/tags/${MS_TAG}")
 VSCODIUM_ASSETS=$( echo "${GITHUB_RESPONSE}" | jq -c '.assets | map(.name)?' )
 
@@ -253,12 +253,6 @@ if [ "${VSCODIUM_ASSETS}" != "null" ]; then
         export SHOULD_BUILD_DEB="no"
       fi
 
-      if [[ -z $( contains "x86_64.rpm" ) ]]; then
-        echo "Building on Linux x64 because we have no RPM"
-        export SHOULD_BUILD="yes"
-      else
-        export SHOULD_BUILD_RPM="no"
-      fi
 
       if [[ -z $( contains "VSCodium-linux-x64-${MS_TAG}.tar.gz" ) ]]; then
         echo "Building on Linux x64 because we have no TAR"
@@ -267,19 +261,6 @@ if [ "${VSCODIUM_ASSETS}" != "null" ]; then
         export SHOULD_BUILD_TAR="no"
       fi
 
-      if [[ -z $( contains "x86_64.AppImage" ) ]]; then
-        echo "Building on Linux x64 because we have no AppImage"
-        export SHOULD_BUILD="yes"
-      else
-        export SHOULD_BUILD_APPIMAGE="no"
-      fi
-
-      if [[ -z $( contains "vscodium-reh-linux-x64-${MS_TAG}.tar.gz" ) ]]; then
-        echo "Building on Linux x64 because we have no REH archive"
-        export SHOULD_BUILD="yes"
-      else
-        export SHOULD_BUILD_REH="no"
-      fi
 
       if [[ "${SHOULD_BUILD}" != "yes" ]]; then
         echo "Already have all the Linux x64 builds"
